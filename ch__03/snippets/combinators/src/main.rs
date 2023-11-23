@@ -1,4 +1,8 @@
-use std::collections::HashMap;
+#![allow(dead_code)]
+use std::{
+    collections::HashMap,
+    fmt::{self, Formatter},
+};
 
 fn vector() {
     let v = vec![1, 2, 3];
@@ -37,9 +41,34 @@ fn fold2() {
     let _sentence = values.fold(String::new(), |acc, x| acc + x);
     println!("{}", _sentence);
 }
+
+fn filter() {
+    let v = vec![-1, 2, -3, 4, 5].into_iter();
+    let _filtered = v.filter(|x: &i32| x.is_positive()).collect::<Vec<i32>>();
+    // println!("{}", filtered);
+}
+struct MyVec {
+    myvec: Vec<i32>,
+}
+fn filter2() {
+    let v = vec![-1, 2, -3, 4, 5];
+    let my_vec = MyVec { myvec: v };
+    println!("{}", my_vec);
+}
+impl fmt::Display for MyVec {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let acc = self.myvec.iter().reduce(|acc, x| {
+            let x_str = x.to_string();
+            println!("{}", x_str);
+            acc
+        });
+        write!(f, "{}", acc.unwrap())
+    }
+}
 fn main() {
     vector();
     array();
     for_each();
     fold2();
+    filter2();
 }
