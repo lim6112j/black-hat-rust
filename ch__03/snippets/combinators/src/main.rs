@@ -55,14 +55,17 @@ fn filter2() {
     let my_vec = MyVec { myvec: v };
     println!("{}", my_vec);
 }
+
 impl fmt::Display for MyVec {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let acc = self.myvec.iter().reduce(|acc, x| {
+        let acc = self.myvec.iter().fold(String::new(), |acc, x| {
             let x_str = x.to_string();
-            println!("{}", x_str);
-            acc
+            match acc.as_ref() {
+                "" => acc + &x_str,
+                _ => acc + ", " + &x_str,
+            }
         });
-        write!(f, "{}", acc.unwrap())
+        write!(f, "[{}]", acc)
     }
 }
 fn main() {
@@ -71,4 +74,36 @@ fn main() {
     for_each();
     fold2();
     filter2();
+    inspect();
+    filter_map();
+}
+
+fn inspect() {
+    let v = vec![-1, 2, -3, 4, 5].into_iter();
+    let _positive_numbers: Vec<i32> = v
+        .inspect(|x| println!("Before filter: {}", x))
+        .filter(|x: &i32| x.is_positive())
+        .inspect(|x| println!("After filter: {}", x))
+        .collect();
+    let my_vec = MyVec {
+        myvec: _positive_numbers,
+    };
+    println!("filtered with positive {}", my_vec)
+}
+fn map() {
+    let v = vec!["Hello", "World", "!"].into_iter();
+    let _w: Vec<String> = v.map(String::from).collect();
+}
+fn filter_map() {
+    let v = vec!["Hello", "World", "!"].into_iter();
+    let _w: Vec<String> = v
+        .filter_map(|x| {
+            if x.len() > 2 {
+                Some(String::from(x))
+            } else {
+                None
+            }
+        })
+        .collect();
+    assert_eq!(_w, vec!["Hello".to_string(), "World".to_string()]);
 }
