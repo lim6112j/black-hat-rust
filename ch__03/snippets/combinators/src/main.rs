@@ -138,3 +138,11 @@ fn combinators() {
         .filter(|x| x > &0)
         .collect();
 }
+// Result to Option with ok()
+fn result_ok() {
+    let _port: Option<String> = std::env::var("PORT").ok();
+}
+fn result_or() {
+    let _port: Result<String, std::env::VarError> =
+        std::env::var("PORT").or(Ok(String::from("8080")));
+}
