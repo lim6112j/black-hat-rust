@@ -107,3 +107,34 @@ fn filter_map() {
         .collect();
     assert_eq!(_w, vec!["Hello".to_string(), "World".to_string()]);
 }
+fn chain() {
+    let x = vec![1, 2, 3, 4, 5].into_iter();
+    let y = vec![6, 7, 8, 9, 10].into_iter();
+    let z: Vec<u64> = x.chain(y).collect();
+    assert_eq!(z.len(), 10);
+}
+fn flatten() {
+    let x = vec![vec![1, 2, 3, 4, 5], vec![6, 7, 8, 9, 10]].into_iter();
+    let z: Vec<u64> = x.flatten().collect();
+    assert_eq!(z.len(), 10);
+}
+// composing combinators
+#[test]
+fn combinators() {
+    let a = vec![
+        "1",
+        "2",
+        "-1",
+        "4",
+        "-4",
+        "100",
+        "invalid",
+        "Not a number",
+        "",
+    ];
+    let _only_positive_numbers: Vec<i64> = a
+        .into_iter()
+        .filter_map(|x| x.parse::<i64>().ok())
+        .filter(|x| x > &0)
+        .collect();
+}
